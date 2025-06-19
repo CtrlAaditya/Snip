@@ -351,6 +351,7 @@ class ImageEditor {
 // DOM Elements
 document.addEventListener('DOMContentLoaded', () => {
     const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
     const loginModal = document.getElementById('loginModal');
     const closeBtn = document.querySelector('.close');
     const loginForm = document.getElementById('loginForm');
@@ -362,6 +363,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Login button click
     loginBtn.addEventListener('click', () => {
         loginModal.style.display = 'block';
+    });
+
+    // Logout button click
+    logoutBtn.addEventListener('click', () => {
+        logout();
     });
 
     // Close modal
@@ -408,16 +414,6 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Login failed. Please try again.');
         }
     });
-
-    // Initialize editor when authenticated
-    if (isAuthenticated) {
-        try {
-            new ImageEditor();
-        } catch (error) {
-            console.error('Error initializing editor:', error);
-            alert('An error occurred while loading the image editor. Please check the console for details.');
-        }
-    }
 });
 
 // Check authentication status
@@ -427,10 +423,19 @@ async function checkAuthStatus() {
         if (response.ok) {
             const data = await response.json();
             isAuthenticated = data.authenticated;
-            const usernameDisplay = document.getElementById('usernameDisplay');
-            usernameDisplay.textContent = data.username ? `Welcome, ${data.username}!` : '';
             const loginBtn = document.getElementById('loginBtn');
-            loginBtn.style.display = isAuthenticated ? 'none' : 'inline-block';
+            const logoutBtn = document.getElementById('logoutBtn');
+            const usernameDisplay = document.getElementById('usernameDisplay');
+            
+            if (isAuthenticated) {
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'inline-block';
+                usernameDisplay.textContent = `Welcome, ${data.username}!`;
+            } else {
+                loginBtn.style.display = 'inline-block';
+                logoutBtn.style.display = 'none';
+                usernameDisplay.textContent = '';
+            }
         }
     } catch (error) {
         console.error('Auth check error:', error);
