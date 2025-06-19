@@ -34,6 +34,24 @@ body {
     position: relative;
 }
 
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--hover-color);
+}
+
 /* Main wrapper */
 .wrapper {
     position: relative;
@@ -60,6 +78,7 @@ body {
     flex-direction: column;
     gap: 16px;
     overflow-y: auto;
+    max-height: calc(100vh - 32px);
 }
 
 /* Background GIF */
@@ -72,6 +91,7 @@ body {
     object-fit: cover;
     opacity: 0.05;
     z-index: -2;
+    animation: pulse 15s infinite;
 }
 
 /* Toolbar */
@@ -339,6 +359,7 @@ button:active {
         min-height: auto;
         height: 100vh;
         overflow-y: auto;
+        max-height: calc(100vh - 24px);
     }
 
     .toolbar {
@@ -486,16 +507,4 @@ button:active {
         opacity: 0.05;
         transform: scale(1);
     }
-}
-
-.background-gif {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-    opacity: 0.05;
-    z-index: -2;
-    animation: pulse 15s infinite;
 }
