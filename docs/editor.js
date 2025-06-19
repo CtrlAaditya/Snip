@@ -350,8 +350,18 @@ class ImageEditor {
 
 // DOM Elements
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded');
+    
     const loginForm = document.getElementById('loginForm');
     const usernameDisplay = document.getElementById('usernameDisplay');
+    
+    if (!loginForm || !usernameDisplay) {
+        console.error('Form elements not found!');
+        return;
+    }
+
+    console.log('Form found:', loginForm);
+    console.log('Username display found:', usernameDisplay);
 
     // Check authentication on load
     checkAuthStatus();
@@ -360,11 +370,18 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         
+        console.log('Form submitted');
+        console.log('Form elements:', loginForm.elements);
+        
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
 
+        console.log('Username:', username);
+        console.log('Password:', password);
+
         // For GitHub Pages, we'll use a hardcoded password check
         if (username === 'admin' && password === 'password123') {
+            console.log('Login successful');
             isAuthenticated = true;
             localStorage.setItem('auth', JSON.stringify({
                 authenticated: true,
@@ -374,18 +391,28 @@ document.addEventListener('DOMContentLoaded', () => {
             loginForm.style.display = 'none';
             usernameDisplay.textContent = `Welcome, ${username}!`;
         } else {
-            alert('Invalid credentials. Username: admin, Password: password123');
+            console.log('Login failed');
+            alert('Invalid credentials. Please use:\nUsername: admin\nPassword: password123');
         }
     });
 });
 
 // Check authentication status
 function checkAuthStatus() {
+    console.log('Checking auth status');
     const authData = JSON.parse(localStorage.getItem('auth') || '{}');
     isAuthenticated = authData.authenticated || false;
     
     const loginForm = document.getElementById('loginForm');
     const usernameDisplay = document.getElementById('usernameDisplay');
+    
+    if (!loginForm || !usernameDisplay) {
+        console.error('Form elements not found in checkAuthStatus!');
+        return;
+    }
+
+    console.log('Is authenticated:', isAuthenticated);
+    console.log('Auth data:', authData);
     
     if (isAuthenticated) {
         loginForm.style.display = 'none';
@@ -398,6 +425,7 @@ function checkAuthStatus() {
 
 // Logout
 function logout() {
+    console.log('Logging out');
     isAuthenticated = false;
     localStorage.removeItem('auth');
     location.reload(); // Refresh to show login form again
