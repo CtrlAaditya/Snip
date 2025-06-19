@@ -177,13 +177,18 @@ class ImageEditor {
     }
 
     handleImageUpload(event) {
+        console.log('Handling image upload');
         const file = event.target.files[0];
-        if (!file) return;
+        if (!file) {
+            console.error('No file selected');
+            return;
+        }
         
         const reader = new FileReader();
         reader.onload = (e) => {
             const img = new Image();
             img.onload = () => {
+                console.log('Image loaded:', img.width, 'x', img.height);
                 this.image = img;
                 this.originalImage = img; // Store original image for reverting
                 this.drawImage(img);
@@ -194,15 +199,20 @@ class ImageEditor {
     }
 
     flipImage(direction) {
-        if (!this.image) return;
+        console.log('Flipping image:', direction);
+        if (!this.image) {
+            console.error('No image to flip');
+            return;
+        }
 
         // Create a temporary canvas
         const tempCanvas = document.createElement('canvas');
         const tempCtx = tempCanvas.getContext('2d');
         
-        // Set temp canvas size based on the image
+        // Set temp canvas size to match the original image
         tempCanvas.width = this.image.width;
         tempCanvas.height = this.image.height;
+        console.log('Original image size:', tempCanvas.width, 'x', tempCanvas.height);
 
         // Draw the original image to temp canvas
         tempCtx.drawImage(this.image, 0, 0);
@@ -213,6 +223,8 @@ class ImageEditor {
 
         // Update the image with the flipped version
         flippedImage.onload = () => {
+            console.log('Flipped image loaded');
+            
             // Clear canvas
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -226,15 +238,16 @@ class ImageEditor {
             } else {
                 height = width / aspectRatio;
             }
+            console.log('Adjusted dimensions:', width, 'x', height);
 
             // Apply flip transformation
             this.ctx.save();
             if (direction === 'horizontal') {
-                // Move to right edge and flip horizontally
+                console.log('Flipping horizontally');
                 this.ctx.translate(width, 0);
                 this.ctx.scale(-1, 1);
             } else if (direction === 'vertical') {
-                // Move to bottom edge and flip vertically
+                console.log('Flipping vertically');
                 this.ctx.translate(0, height);
                 this.ctx.scale(1, -1);
             }
@@ -251,11 +264,16 @@ class ImageEditor {
 
             // Update the current image reference
             this.image = flippedImage;
+            console.log('Image flipped successfully');
         };
     }
 
     revertImage() {
-        if (!this.originalImage) return;
+        console.log('Reverting image');
+        if (!this.originalImage) {
+            console.error('No original image to revert to');
+            return;
+        }
         
         // Clear canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -270,6 +288,7 @@ class ImageEditor {
         } else {
             height = width / aspectRatio;
         }
+        console.log('Reverting to dimensions:', width, 'x', height);
 
         // Reset filters
         this.filters = {
@@ -292,10 +311,15 @@ class ImageEditor {
 
         // Reset the image reference to original
         this.image = this.originalImage;
+        console.log('Image reverted successfully');
     }
 
     drawImage(img) {
-        if (!this.ctx) return;
+        console.log('Drawing image');
+        if (!this.ctx) {
+            console.error('No canvas context');
+            return;
+        }
 
         // Clear canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -310,6 +334,7 @@ class ImageEditor {
         } else {
             height = width / aspectRatio;
         }
+        console.log('Drawing dimensions:', width, 'x', height);
 
         // Apply filters
         this.ctx.filter = `
