@@ -7,8 +7,15 @@ let loadingPlayed = false;
 
 // Update debug info
 function updateDebugInfo(canvasFound, containerFound) {
-    document.getElementById('canvasStatus').textContent = canvasFound ? 'Found' : 'Not found';
-    document.getElementById('containerStatus').textContent = containerFound ? 'Found' : 'Not found';
+    const canvasStatus = document.getElementById('canvasStatus');
+    const containerStatus = document.getElementById('containerStatus');
+    
+    if (canvasStatus) {
+        canvasStatus.textContent = canvasFound ? 'Found' : 'Not found';
+    }
+    if (containerStatus) {
+        containerStatus.textContent = containerFound ? 'Found' : 'Not found';
+    }
 }
 
 // ImageEditor class
@@ -82,6 +89,7 @@ class ImageEditor {
             throw new Error('Invalid container dimensions');
         }
         
+        // Set canvas size
         this.canvas.width = width;
         this.canvas.height = height;
         
@@ -243,88 +251,89 @@ class ImageEditor {
 }
 
 // DOM Elements
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM loaded');
     
-    // Check all required elements
-    const elements = {
-        loadingOverlay: document.getElementById('loadingOverlay'),
-        container: document.querySelector('.container'),
-        loginForm: document.getElementById('loginForm'),
-        usernameDisplay: document.getElementById('usernameDisplay'),
-        canvas: document.getElementById('editorCanvas'),
-        canvasContainer: document.querySelector('.canvas-container')
-    };
-
-    // Debug logging
-    console.log('Element checks:');
-    Object.entries(elements).forEach(([name, el]) => {
-        console.log(`${name}:`, el ? 'Found' : 'Not found');
-    });
-
-    // Check for missing required elements
-    if (Object.values(elements).some(el => !el)) {
-        console.error('Missing required DOM elements!');
-        throw new Error('Missing required DOM elements');
-    }
-
-    // Play loading animation only once
-    if (!loadingPlayed) {
-        elements.loadingOverlay.classList.add('playing');
-        
-        // After 2 seconds, fade out the overlay
-        setTimeout(() => {
-            elements.loadingOverlay.classList.remove('playing');
-            elements.loadingOverlay.classList.add('fading');
-            loadingPlayed = true;
-            
-            // After fade animation, hide completely
-            setTimeout(() => {
-                elements.loadingOverlay.style.display = 'none';
-            }, 500); // Match CSS transition time
-        }, 2000);
-    }
-
-    // Check authentication on load
-    checkAuthStatus();
-
-    // Initialize editor
     try {
+        // Check all required elements
+        const elements = {
+            loadingOverlay: document.getElementById('loadingOverlay'),
+            container: document.querySelector('.container'),
+            loginForm: document.getElementById('loginForm'),
+            usernameDisplay: document.getElementById('usernameDisplay'),
+            canvas: document.getElementById('editorCanvas'),
+            canvasContainer: document.querySelector('.canvas-container')
+        };
+
+        // Debug logging
+        console.log('Element checks:');
+        Object.entries(elements).forEach(([name, el]) => {
+            console.log(`${name}:`, el ? 'Found' : 'Not found');
+        });
+
+        // Check for missing required elements
+        if (Object.values(elements).some(el => !el)) {
+            console.error('Missing required DOM elements!');
+            throw new Error('Missing required DOM elements');
+        }
+
+        // Play loading animation only once
+        if (!loadingPlayed) {
+            elements.loadingOverlay.classList.add('playing');
+            
+            // After 2 seconds, fade out the overlay
+            setTimeout(() => {
+                elements.loadingOverlay.classList.remove('playing');
+                elements.loadingOverlay.classList.add('fading');
+                loadingPlayed = true;
+                
+                // After fade animation, hide completely
+                setTimeout(() => {
+                    elements.loadingOverlay.style.display = 'none';
+                }, 500); // Match CSS transition time
+            }, 2000);
+        }
+
+        // Check authentication on load
+        await checkAuthStatus();
+
+        // Initialize editor
         const editor = new ImageEditor(elements);
+
+        // Login form submission
+        elements.loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            console.log('Attempting login with:', { username: username, passwordLength: password.length });
+
+            // For GitHub Pages, we'll use a hardcoded password check
+            if (username === 'admin' && password === 'password123') {
+                console.log('Login successful');
+                isAuthenticated = true;
+                localStorage.setItem('auth', JSON.stringify({
+                    authenticated: true,
+                    username: username
+                }));
+                
+                elements.loginForm.style.display = 'none';
+                elements.usernameDisplay.textContent = `Welcome, ${username}!`;
+            } else {
+                console.log('Login failed');
+                alert('Invalid credentials. Please use:\nUsername: admin\nPassword: password123');
+            }
+        });
+
     } catch (error) {
         console.error('Error initializing editor:', error);
         alert('Error loading image editor. Please refresh the page.');
     }
-
-    // Login form submission
-    elements.loginForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        console.log('Attempting login with:', { username: username, passwordLength: password.length });
-
-        // For GitHub Pages, we'll use a hardcoded password check
-        if (username === 'admin' && password === 'password123') {
-            console.log('Login successful');
-            isAuthenticated = true;
-            localStorage.setItem('auth', JSON.stringify({
-                authenticated: true,
-                username: username
-            }));
-            
-            elements.loginForm.style.display = 'none';
-            elements.usernameDisplay.textContent = `Welcome, ${username}!`;
-        } else {
-            console.log('Login failed');
-            alert('Invalid credentials. Please use:\nUsername: admin\nPassword: password123');
-        }
-    });
 });
 
 // Check authentication status
-function checkAuthStatus() {
+async function checkAuthStatus() {
     console.log('Checking auth status');
     const auth = localStorage.getItem('auth');
     if (auth) {
