@@ -77,6 +77,15 @@
         </div>
     </div>
 
-    <script src="editor.js"></script>
+    <script>
+        // Initialize editor after DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load the editor script
+            const script = document.createElement('script');
+            script.src = 'editor.js';
+            script.async = false;
+            document.body.appendChild(script);
+        });
+    </script>
 </body>
 </html>
