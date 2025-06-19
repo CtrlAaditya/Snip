@@ -15,32 +15,16 @@
 </head>
 <body>
     <div class="container">
-        <div id="loginModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <h2>Login</h2>
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="username">Username:</label>
-                        <input type="text" id="username" name="username" required placeholder="Enter username">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password:</label>
-                        <input type="password" id="password" name="password" required placeholder="Enter password">
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" class="login-btn">Login</button>
-                    </div>
-                </form>
-            </div>
-        </div>
         <div class="toolbar">
+            <div class="auth-controls">
+                <form id="loginForm" style="display: flex; gap: 10px;">
+                    <input type="text" id="username" placeholder="Username" required>
+                    <input type="password" id="password" placeholder="Password" required>
+                    <button type="submit">Login</button>
+                </form>
+                <span id="usernameDisplay"></span>
+            </div>
             <div class="controls">
-                <div class="auth-controls">
-                    <button id="loginBtn">Login</button>
-                    <button id="logoutBtn" style="display: none;">Logout</button>
-                    <span id="usernameDisplay"></span>
-                </div>
                 <div class="control-group">
                     <label>Upload Image</label>
                     <div class="upload-container">

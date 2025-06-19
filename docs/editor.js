@@ -350,70 +350,31 @@ class ImageEditor {
 
 // DOM Elements
 document.addEventListener('DOMContentLoaded', () => {
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const loginModal = document.getElementById('loginModal');
-    const closeBtn = document.querySelector('.close');
     const loginForm = document.getElementById('loginForm');
     const usernameDisplay = document.getElementById('usernameDisplay');
 
     // Check authentication on load
     checkAuthStatus();
 
-    // Login button click
-    loginBtn.addEventListener('click', () => {
-        loginModal.style.display = 'block';
-    });
-
-    // Logout button click
-    logoutBtn.addEventListener('click', () => {
-        logout();
-    });
-
-    // Close modal
-    closeBtn.addEventListener('click', () => {
-        loginModal.style.display = 'none';
-    });
-
-    // Close modal when clicking outside
-    window.addEventListener('click', (event) => {
-        if (event.target === loginModal) {
-            loginModal.style.display = 'none';
-        }
-    });
-
     // Login form submission
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         
-        const formData = new FormData(loginForm);
-        const username = formData.get('username');
-        const password = formData.get('password');
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
 
-        try {
-            console.log('Attempting login with:', { username: username, passwordLength: password.length });
+        // For GitHub Pages, we'll use a hardcoded password check
+        if (username === 'admin' && password === 'password123') {
+            isAuthenticated = true;
+            localStorage.setItem('auth', JSON.stringify({
+                authenticated: true,
+                username: username
+            }));
             
-            // For GitHub Pages, we'll use a hardcoded password check
-            const validCredentials = username === 'admin' && password === 'password123';
-            
-            if (validCredentials) {
-                console.log('Login successful');
-                isAuthenticated = true;
-                localStorage.setItem('auth', JSON.stringify({
-                    authenticated: true,
-                    username: username
-                }));
-                
-                loginModal.style.display = 'none';
-                loginForm.reset();
-                checkAuthStatus();
-            } else {
-                console.log('Login failed - invalid credentials');
-                alert('Invalid credentials. Please try again.');
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('An unexpected error occurred. Please try again.');
+            loginForm.style.display = 'none';
+            usernameDisplay.textContent = `Welcome, ${username}!`;
+        } else {
+            alert('Invalid credentials. Username: admin, Password: password123');
         }
     });
 });
@@ -423,17 +384,14 @@ function checkAuthStatus() {
     const authData = JSON.parse(localStorage.getItem('auth') || '{}');
     isAuthenticated = authData.authenticated || false;
     
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
+    const loginForm = document.getElementById('loginForm');
     const usernameDisplay = document.getElementById('usernameDisplay');
     
     if (isAuthenticated) {
-        loginBtn.style.display = 'none';
-        logoutBtn.style.display = 'inline-block';
+        loginForm.style.display = 'none';
         usernameDisplay.textContent = `Welcome, ${authData.username || 'User'}!`;
     } else {
-        loginBtn.style.display = 'inline-block';
-        logoutBtn.style.display = 'none';
+        loginForm.style.display = 'flex';
         usernameDisplay.textContent = '';
     }
 }
@@ -442,7 +400,7 @@ function checkAuthStatus() {
 function logout() {
     isAuthenticated = false;
     localStorage.removeItem('auth');
-    checkAuthStatus();
+    location.reload(); // Refresh to show login form again
 }
 
 // Add error handling for canvas
