@@ -365,21 +365,14 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Form found:', loginForm);
     console.log('Username display found:', usernameDisplay);
 
-    // Initialize loading overlay
-    loadingOverlay.style.display = 'flex';
-    loadingOverlay.style.opacity = '1';
-    container.style.display = 'none';
+    // Initialize loading overlay and container
+    loadingOverlay.classList.add('show');
+    container.style.display = 'block';
 
     // Hide loading overlay after a delay
     setTimeout(() => {
-        loadingOverlay.style.opacity = '0';
-        loadingOverlay.style.pointerEvents = 'none';
-        container.style.display = 'block';
-        
-        // Add transition end listener to remove loading overlay
-        loadingOverlay.addEventListener('transitionend', () => {
-            loadingOverlay.style.display = 'none';
-        }, { once: true });
+        loadingOverlay.classList.remove('show');
+        container.classList.remove('hide');
     }, 2000);
 
     // Check authentication on load
@@ -395,10 +388,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Attempting login with:', { username: username, passwordLength: password.length });
 
         // Show loading overlay during login
-        loadingOverlay.style.display = 'flex';
-        loadingOverlay.style.opacity = '1';
-        loadingOverlay.style.pointerEvents = 'auto';
-        container.style.display = 'none';
+        loadingOverlay.classList.add('show');
+        container.classList.add('hide');
         
         // For GitHub Pages, we'll use a hardcoded password check
         if (username === 'admin' && password === 'password123') {
@@ -411,30 +402,17 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Hide loading overlay after successful login
             setTimeout(() => {
-                loadingOverlay.style.opacity = '0';
-                loadingOverlay.style.pointerEvents = 'none';
-                container.style.display = 'block';
+                loadingOverlay.classList.remove('show');
+                container.classList.remove('hide');
                 loginForm.style.display = 'none';
                 usernameDisplay.textContent = `Welcome, ${username}!`;
-                
-                // Add transition end listener to remove loading overlay
-                loadingOverlay.addEventListener('transitionend', () => {
-                    loadingOverlay.style.display = 'none';
-                }, { once: true });
             }, 2000);
         } else {
             console.log('Login failed');
             // Hide loading overlay after failed login
             setTimeout(() => {
-                loadingOverlay.style.opacity = '0';
-                loadingOverlay.style.pointerEvents = 'none';
-                container.style.display = 'block';
-                
-                // Add transition end listener to remove loading overlay
-                loadingOverlay.addEventListener('transitionend', () => {
-                    loadingOverlay.style.display = 'none';
-                }, { once: true });
-                
+                loadingOverlay.classList.remove('show');
+                container.classList.remove('hide');
                 alert('Invalid credentials. Please use:\nUsername: admin\nPassword: password123');
             }, 2000);
         }
