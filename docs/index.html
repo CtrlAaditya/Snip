@@ -84,6 +84,20 @@
             const script = document.createElement('script');
             script.src = 'editor.js';
             script.async = false;
+            script.onload = function() {
+                console.log('Editor script loaded successfully');
+                // Initialize editor after script is loaded
+                try {
+                    new ImageEditor();
+                } catch (error) {
+                    console.error('Error initializing editor:', error);
+                    alert('Error loading image editor. Please refresh the page.');
+                }
+            };
+            script.onerror = function() {
+                console.error('Error loading editor script');
+                alert('Failed to load editor script. Please refresh the page.');
+            };
             document.body.appendChild(script);
         });
     </script>

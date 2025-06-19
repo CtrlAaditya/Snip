@@ -10,20 +10,10 @@ class ImageEditor {
     constructor() {
         console.log('Initializing ImageEditor');
         try {
-            // Initialize empty properties
-            this.image = null;
-            this.filters = [];
-            this.transform = {
-                rotation: 0,
-                flipX: false,
-                flipY: false
-            };
-
             // Initialize editor
             this.initializeEditor();
         } catch (error) {
             console.error('Error in ImageEditor constructor:', error);
-            alert('Error initializing editor: ' + error.message);
             throw error;
         }
     }
@@ -31,7 +21,7 @@ class ImageEditor {
     initializeEditor() {
         console.log('Initializing editor elements');
         try {
-            // Get elements
+            // Get canvas
             this.canvas = document.getElementById('editorCanvas');
             if (!this.canvas) {
                 console.error('Canvas element not found');
@@ -45,36 +35,35 @@ class ImageEditor {
                 throw new Error('Could not get canvas context');
             }
 
-            console.log('Canvas initialized successfully');
-            
-            // Initialize canvas size
-            this.resizeCanvas();
+            // Set canvas size
+            this.setSize();
             
             // Add event listeners
             this.addEventListeners();
             
+            console.log('Editor initialized successfully');
         } catch (error) {
             console.error('Error initializing editor:', error);
             throw error;
         }
     }
 
-    resizeCanvas() {
-        // Get container size
-        const container = this.canvas.parentElement;
-        const containerWidth = container.clientWidth;
-        const containerHeight = container.clientHeight;
-        
+    setSize() {
         // Set canvas size to match container
-        this.canvas.width = containerWidth;
-        this.canvas.height = containerHeight;
+        const container = this.canvas.parentElement;
+        if (!container) {
+            throw new Error('Canvas container not found');
+        }
         
-        console.log('Canvas resized to:', this.canvas.width, 'x', this.canvas.height);
+        this.canvas.width = container.clientWidth;
+        this.canvas.height = container.clientHeight;
+        
+        console.log('Canvas size set to:', this.canvas.width, 'x', this.canvas.height);
     }
 
     addEventListeners() {
         // Add resize listener
-        window.addEventListener('resize', () => this.resizeCanvas());
+        window.addEventListener('resize', () => this.setSize());
         
         // Add image upload listener
         const imageUpload = document.getElementById('imageUpload');
@@ -97,9 +86,6 @@ class ImageEditor {
     }
 
     drawImage(img) {
-        // Clear canvas
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        
         // Calculate dimensions to fit canvas while maintaining aspect ratio
         const aspectRatio = img.width / img.height;
         let width = this.canvas.width;
@@ -220,16 +206,6 @@ function logout() {
 }
 
 // Error handling
-document.addEventListener('DOMContentLoaded', () => {
-    try {
-        // Initialize editor
-        new ImageEditor();
-    } catch (error) {
-        console.error('Error initializing editor:', error);
-        alert('Error loading image editor. Please refresh the page.');
-    }
-});
-
 window.onerror = function(msg, url, line, col, error) {
     console.error('Error:', msg, 'at', url, 'line:', line, 'col:', col);
     alert('An error occurred. Please check the console for details.');
@@ -238,6 +214,6 @@ window.onerror = function(msg, url, line, col, error) {
 
 window.onunhandledrejection = function(event) {
     console.error('Unhandled promise rejection:', event.reason);
-    alert('An error occurred while processing your request. Please try again.');
+    alert('An unexpected error occurred. Please try again.');
     return false;
 };
