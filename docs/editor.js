@@ -114,6 +114,12 @@ class ImageEditor {
         if (resetButton) {
             resetButton.addEventListener('click', () => this.resetFilters());
         }
+
+        // Add save button listener
+        const saveButton = document.getElementById('save');
+        if (saveButton) {
+            saveButton.addEventListener('click', () => this.saveImage());
+        }
     }
 
     handleImageUpload(event) {
@@ -189,6 +195,21 @@ class ImageEditor {
         if (this.image) {
             this.drawImage(this.image);
         }
+    }
+
+    saveImage() {
+        if (!this.image) return;
+
+        // Get the canvas data URL
+        const dataURL = this.canvas.toDataURL();
+
+        // Create a new link element
+        const link = document.createElement('a');
+        link.href = dataURL;
+        link.download = 'image.png';
+
+        // Simulate a click on the link
+        link.click();
     }
 }
 
