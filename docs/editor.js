@@ -5,6 +5,12 @@ console.log('Image editor script loaded');
 let isAuthenticated = false;
 let loadingPlayed = false;
 
+// Update debug info
+function updateDebugInfo(canvasFound, containerFound) {
+    document.getElementById('canvasStatus').textContent = canvasFound ? 'Found' : 'Not found';
+    document.getElementById('containerStatus').textContent = containerFound ? 'Found' : 'Not found';
+}
+
 // ImageEditor class
 class ImageEditor {
     constructor(elements) {
@@ -54,6 +60,7 @@ class ImageEditor {
             this.addEventListeners();
             
             console.log('Editor initialized successfully');
+            updateDebugInfo(true, true);
         } catch (error) {
             console.error('Error initializing editor:', error);
             throw error;
@@ -115,11 +122,33 @@ class ImageEditor {
             resetButton.addEventListener('click', () => this.resetFilters());
         }
 
+        // Add apply button listener
+        const applyButton = document.getElementById('apply');
+        if (applyButton) {
+            applyButton.addEventListener('click', () => this.applyFilters());
+        }
+
         // Add save button listener
         const saveButton = document.getElementById('save');
         if (saveButton) {
             saveButton.addEventListener('click', () => this.saveImage());
         }
+    }
+
+    applyFilters() {
+        if (!this.image) return;
+
+        // Get current filter values
+        const filters = {
+            brightness: document.getElementById('brightness').value,
+            contrast: document.getElementById('contrast').value,
+            saturation: document.getElementById('saturation').value,
+            hue: document.getElementById('hue').value,
+            blur: document.getElementById('blur').value
+        };
+
+        // Update the image with these filters
+        this.drawImage(this.image);
     }
 
     handleImageUpload(event) {
@@ -206,7 +235,7 @@ class ImageEditor {
         // Create a new link element
         const link = document.createElement('a');
         link.href = dataURL;
-        link.download = 'image.png';
+        link.download = 'edited-image.png';
 
         // Simulate a click on the link
         link.click();
@@ -248,6 +277,11 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.loadingOverlay.classList.remove('playing');
             elements.loadingOverlay.classList.add('fading');
             loadingPlayed = true;
+            
+            // After fade animation, hide completely
+            setTimeout(() => {
+                elements.loadingOverlay.style.display = 'none';
+            }, 500); // Match CSS transition time
         }, 2000);
     }
 
