@@ -5,6 +5,88 @@ console.log('Image editor script loaded');
 let isAuthenticated = false;
 let loadingPlayed = false;
 
+// Error handling
+document.addEventListener('DOMContentLoaded', () => {
+    try {
+        // Initialize editor
+        new ImageEditor();
+    } catch (error) {
+        console.error('Error initializing editor:', error);
+        alert('Error loading image editor. Please refresh the page.');
+    }
+});
+
+window.onerror = function(msg, url, line, col, error) {
+    console.error('Error:', msg, 'at', url, 'line:', line, 'col:', col);
+    alert('An error occurred. Please check the console for details.');
+    return false;
+};
+
+window.onunhandledrejection = function(event) {
+    console.error('Unhandled promise rejection:', event.reason);
+    alert('An error occurred while processing your request. Please try again.');
+    return false;
+};
+
+// DOM Elements
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded');
+    
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const container = document.querySelector('.container');
+    const loginForm = document.getElementById('loginForm');
+    const usernameDisplay = document.getElementById('usernameDisplay');
+    
+    if (!loadingOverlay || !container || !loginForm || !usernameDisplay) {
+        console.error('Form elements not found!');
+        throw new Error('Missing required DOM elements');
+    }
+
+    console.log('Form found:', loginForm);
+    console.log('Username display found:', usernameDisplay);
+
+    // Play loading animation only once
+    if (!loadingPlayed) {
+        loadingOverlay.classList.add('playing');
+        
+        // After 2 seconds, fade out the overlay
+        setTimeout(() => {
+            loadingOverlay.classList.remove('playing');
+            loadingOverlay.classList.add('fading');
+            loadingPlayed = true;
+        }, 2000);
+    }
+
+    // Check authentication on load
+    checkAuthStatus();
+
+    // Login form submission
+    loginForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        console.log('Attempting login with:', { username: username, passwordLength: password.length });
+
+        // For GitHub Pages, we'll use a hardcoded password check
+        if (username === 'admin' && password === 'password123') {
+            console.log('Login successful');
+            isAuthenticated = true;
+            localStorage.setItem('auth', JSON.stringify({
+                authenticated: true,
+                username: username
+            }));
+            
+            loginForm.style.display = 'none';
+            usernameDisplay.textContent = `Welcome, ${username}!`;
+        } else {
+            console.log('Login failed');
+            alert('Invalid credentials. Please use:\nUsername: admin\nPassword: password123');
+        }
+    });
+});
+
 class ImageEditor {
     constructor() {
         console.log('Initializing ImageEditor');
@@ -349,65 +431,6 @@ class ImageEditor {
     }
 }
 
-// DOM Elements
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded');
-    
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const container = document.querySelector('.container');
-    const loginForm = document.getElementById('loginForm');
-    const usernameDisplay = document.getElementById('usernameDisplay');
-    
-    if (!loadingOverlay || !container || !loginForm || !usernameDisplay) {
-        console.error('Form elements not found!');
-        return;
-    }
-
-    console.log('Form found:', loginForm);
-    console.log('Username display found:', usernameDisplay);
-
-    // Play loading animation only once
-    if (!loadingPlayed) {
-        loadingOverlay.classList.add('playing');
-        
-        // After 2 seconds, fade out the overlay
-        setTimeout(() => {
-            loadingOverlay.classList.remove('playing');
-            loadingOverlay.classList.add('fading');
-            loadingPlayed = true;
-        }, 2000);
-    }
-
-    // Check authentication on load
-    checkAuthStatus();
-
-    // Login form submission
-    loginForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        console.log('Attempting login with:', { username: username, passwordLength: password.length });
-
-        // For GitHub Pages, we'll use a hardcoded password check
-        if (username === 'admin' && password === 'password123') {
-            console.log('Login successful');
-            isAuthenticated = true;
-            localStorage.setItem('auth', JSON.stringify({
-                authenticated: true,
-                username: username
-            }));
-            
-            loginForm.style.display = 'none';
-            usernameDisplay.textContent = `Welcome, ${username}!`;
-        } else {
-            console.log('Login failed');
-            alert('Invalid credentials. Please use:\nUsername: admin\nPassword: password123');
-        }
-    });
-});
-
 // Check authentication status
 function checkAuthStatus() {
     console.log('Checking auth status');
@@ -441,23 +464,3 @@ function logout() {
     localStorage.removeItem('auth');
     location.reload(); // Refresh to show login form again
 }
-
-// Initialize editor when DOM is ready
-try {
-    new ImageEditor();
-} catch (error) {
-    console.error('Error initializing editor:', error);
-    alert('An error occurred while loading the image editor. Please check the console for details.');
-}
-
-// Add error handling for canvas
-window.onerror = function(msg, url, line, col, error) {
-    console.error('Error:', error);
-    alert('An error occurred: ' + msg);
-};
-
-// Add error handling for unhandled promise rejections
-window.onunhandledrejection = function(event) {
-    console.error('Unhandled rejection:', event.reason);
-    alert('An unexpected error occurred. Please try again.');
-};
