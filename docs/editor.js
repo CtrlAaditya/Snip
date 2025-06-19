@@ -5,6 +5,73 @@ console.log('Image editor script loaded');
 let isAuthenticated = false;
 let loadingPlayed = false;
 
+// DOM Elements
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded');
+    
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const container = document.querySelector('.container');
+    const loginForm = document.getElementById('loginForm');
+    const usernameDisplay = document.getElementById('usernameDisplay');
+    
+    if (!loadingOverlay || !container || !loginForm || !usernameDisplay) {
+        console.error('Form elements not found!');
+        throw new Error('Missing required DOM elements');
+    }
+
+    console.log('Form found:', loginForm);
+    console.log('Username display found:', usernameDisplay);
+
+    // Play loading animation only once
+    if (!loadingPlayed) {
+        loadingOverlay.classList.add('playing');
+        
+        // After 2 seconds, fade out the overlay
+        setTimeout(() => {
+            loadingOverlay.classList.remove('playing');
+            loadingOverlay.classList.add('fading');
+            loadingPlayed = true;
+        }, 2000);
+    }
+
+    // Check authentication on load
+    checkAuthStatus();
+
+    // Initialize editor
+    try {
+        new ImageEditor();
+    } catch (error) {
+        console.error('Error initializing editor:', error);
+        alert('Error loading image editor. Please refresh the page.');
+    }
+
+    // Login form submission
+    loginForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        console.log('Attempting login with:', { username: username, passwordLength: password.length });
+
+        // For GitHub Pages, we'll use a hardcoded password check
+        if (username === 'admin' && password === 'password123') {
+            console.log('Login successful');
+            isAuthenticated = true;
+            localStorage.setItem('auth', JSON.stringify({
+                authenticated: true,
+                username: username
+            }));
+            
+            loginForm.style.display = 'none';
+            usernameDisplay.textContent = `Welcome, ${username}!`;
+        } else {
+            console.log('Login failed');
+            alert('Invalid credentials. Please use:\nUsername: admin\nPassword: password123');
+        }
+    });
+});
+
 // ImageEditor class
 class ImageEditor {
     constructor() {
@@ -112,73 +179,6 @@ class ImageEditor {
         );
     }
 }
-
-// DOM Elements
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded');
-    
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const container = document.querySelector('.container');
-    const loginForm = document.getElementById('loginForm');
-    const usernameDisplay = document.getElementById('usernameDisplay');
-    
-    if (!loadingOverlay || !container || !loginForm || !usernameDisplay) {
-        console.error('Form elements not found!');
-        throw new Error('Missing required DOM elements');
-    }
-
-    console.log('Form found:', loginForm);
-    console.log('Username display found:', usernameDisplay);
-
-    // Play loading animation only once
-    if (!loadingPlayed) {
-        loadingOverlay.classList.add('playing');
-        
-        // After 2 seconds, fade out the overlay
-        setTimeout(() => {
-            loadingOverlay.classList.remove('playing');
-            loadingOverlay.classList.add('fading');
-            loadingPlayed = true;
-        }, 2000);
-    }
-
-    // Check authentication on load
-    checkAuthStatus();
-
-    // Initialize editor
-    try {
-        new ImageEditor();
-    } catch (error) {
-        console.error('Error initializing editor:', error);
-        alert('Error loading image editor. Please refresh the page.');
-    }
-
-    // Login form submission
-    loginForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-
-        console.log('Attempting login with:', { username: username, passwordLength: password.length });
-
-        // For GitHub Pages, we'll use a hardcoded password check
-        if (username === 'admin' && password === 'password123') {
-            console.log('Login successful');
-            isAuthenticated = true;
-            localStorage.setItem('auth', JSON.stringify({
-                authenticated: true,
-                username: username
-            }));
-            
-            loginForm.style.display = 'none';
-            usernameDisplay.textContent = `Welcome, ${username}!`;
-        } else {
-            console.log('Login failed');
-            alert('Invalid credentials. Please use:\nUsername: admin\nPassword: password123');
-        }
-    });
-});
 
 // Check authentication status
 function checkAuthStatus() {

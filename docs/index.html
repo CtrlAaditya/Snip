@@ -72,34 +72,12 @@
         </div>
 
         <!-- Canvas container -->
-        <div class="canvas-container" style="width: 100%; height: 100%;">
-            <canvas id="editorCanvas" style="width: 100%; height: 100%;"></canvas>
+        <div class="canvas-container">
+            <canvas id="editorCanvas"></canvas>
         </div>
     </div>
 
-    <script>
-        // Initialize editor after DOM is ready
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load the editor script
-            const script = document.createElement('script');
-            script.src = 'editor.js';
-            script.async = false;
-            script.onload = function() {
-                console.log('Editor script loaded successfully');
-                // Initialize editor after script is loaded
-                try {
-                    new ImageEditor();
-                } catch (error) {
-                    console.error('Error initializing editor:', error);
-                    alert('Error loading image editor. Please refresh the page.');
-                }
-            };
-            script.onerror = function() {
-                console.error('Error loading editor script');
-                alert('Failed to load editor script. Please refresh the page.');
-            };
-            document.body.appendChild(script);
-        });
-    </script>
+    <!-- Load editor script directly -->
+    <script src="editor.js"></script>
 </body>
 </html>
