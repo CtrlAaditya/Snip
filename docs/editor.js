@@ -290,6 +290,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // After fade animation, hide completely
                 setTimeout(() => {
                     elements.loadingOverlay.style.display = 'none';
+                    elements.loadingOverlay.style.opacity = '0';
+                    elements.loadingOverlay.style.pointerEvents = 'none';
                 }, 500); // Match CSS transition time
             }, 2000);
         }
