@@ -383,7 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Login form submission
-    loginForm.addEventListener('submit', async (event) => {
+    loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         
         const formData = new FormData(loginForm);
@@ -391,10 +391,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = formData.get('password');
 
         try {
+            console.log('Attempting login with:', { username: username, passwordLength: password.length });
+            
             // For GitHub Pages, we'll use a hardcoded password check
             const validCredentials = username === 'admin' && password === 'password123';
             
             if (validCredentials) {
+                console.log('Login successful');
                 isAuthenticated = true;
                 localStorage.setItem('auth', JSON.stringify({
                     authenticated: true,
@@ -405,11 +408,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 loginForm.reset();
                 checkAuthStatus();
             } else {
+                console.log('Login failed - invalid credentials');
                 alert('Invalid credentials. Please try again.');
             }
         } catch (error) {
             console.error('Login error:', error);
-            alert('Login failed. Please try again.');
+            alert('An unexpected error occurred. Please try again.');
         }
     });
 });
