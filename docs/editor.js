@@ -9,27 +9,36 @@ let loadingPlayed = false;
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded');
     
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const container = document.querySelector('.container');
-    const loginForm = document.getElementById('loginForm');
-    const usernameDisplay = document.getElementById('usernameDisplay');
-    
-    if (!loadingOverlay || !container || !loginForm || !usernameDisplay) {
-        console.error('Form elements not found!');
+    // Check all required elements
+    const elements = {
+        loadingOverlay: document.getElementById('loadingOverlay'),
+        container: document.querySelector('.container'),
+        loginForm: document.getElementById('loginForm'),
+        usernameDisplay: document.getElementById('usernameDisplay'),
+        canvas: document.getElementById('editorCanvas'),
+        canvasContainer: document.querySelector('.canvas-container')
+    };
+
+    // Debug logging
+    console.log('Element checks:');
+    Object.entries(elements).forEach(([name, el]) => {
+        console.log(`${name}:`, el ? 'Found' : 'Not found');
+    });
+
+    // Check for missing required elements
+    if (Object.values(elements).some(el => !el)) {
+        console.error('Missing required DOM elements!');
         throw new Error('Missing required DOM elements');
     }
 
-    console.log('Form found:', loginForm);
-    console.log('Username display found:', usernameDisplay);
-
     // Play loading animation only once
     if (!loadingPlayed) {
-        loadingOverlay.classList.add('playing');
+        elements.loadingOverlay.classList.add('playing');
         
         // After 2 seconds, fade out the overlay
         setTimeout(() => {
-            loadingOverlay.classList.remove('playing');
-            loadingOverlay.classList.add('fading');
+            elements.loadingOverlay.classList.remove('playing');
+            elements.loadingOverlay.classList.add('fading');
             loadingPlayed = true;
         }, 2000);
     }
@@ -39,14 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize editor
     try {
-        new ImageEditor();
+        const editor = new ImageEditor(elements);
     } catch (error) {
         console.error('Error initializing editor:', error);
         alert('Error loading image editor. Please refresh the page.');
     }
 
     // Login form submission
-    loginForm.addEventListener('submit', (event) => {
+    elements.loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         
         const username = document.getElementById('username').value;
@@ -63,8 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 username: username
             }));
             
-            loginForm.style.display = 'none';
-            usernameDisplay.textContent = `Welcome, ${username}!`;
+            elements.loginForm.style.display = 'none';
+            elements.usernameDisplay.textContent = `Welcome, ${username}!`;
         } else {
             console.log('Login failed');
             alert('Invalid credentials. Please use:\nUsername: admin\nPassword: password123');
@@ -74,22 +83,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ImageEditor class
 class ImageEditor {
-    constructor() {
+    constructor(elements) {
         console.log('Initializing ImageEditor');
         try {
             // Initialize editor
-            this.initializeEditor();
+            this.initializeEditor(elements);
         } catch (error) {
             console.error('Error in ImageEditor constructor:', error);
             throw error;
         }
     }
 
-    initializeEditor() {
+    initializeEditor(elements) {
         console.log('Initializing editor elements');
         try {
-            // Get canvas
-            this.canvas = document.getElementById('editorCanvas');
+            // Get canvas and context
+            this.canvas = elements.canvas;
+            this.canvasContainer = elements.canvasContainer;
+            
             if (!this.canvas) {
                 console.error('Canvas element not found');
                 throw new Error('Canvas element not found');
@@ -117,14 +128,21 @@ class ImageEditor {
 
     setSize() {
         // Get container dimensions
-        const container = this.canvas.parentElement;
-        if (!container) {
+        if (!this.canvasContainer) {
             throw new Error('Canvas container not found');
         }
         
         // Set canvas dimensions based on container
-        this.canvas.width = container.clientWidth;
-        this.canvas.height = container.clientHeight;
+        const width = this.canvasContainer.clientWidth;
+        const height = this.canvasContainer.clientHeight;
+        
+        if (width <= 0 || height <= 0) {
+            console.error('Invalid container dimensions:', width, 'x', height);
+            throw new Error('Invalid container dimensions');
+        }
+        
+        this.canvas.width = width;
+        this.canvas.height = height;
         
         // Ensure canvas is visible
         this.canvas.style.width = '100%';
