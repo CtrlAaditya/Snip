@@ -102,7 +102,9 @@ class ImageEditor {
             if (element) {
                 element.addEventListener('input', (e) => {
                     this.filters[filter] = parseInt(e.target.value);
-                    this.applyFilters();
+                    if (this.image) {
+                        this.drawImage(this.image);
+                    }
                 });
             }
         });
@@ -146,28 +148,6 @@ class ImageEditor {
         } else {
             height = width / aspectRatio;
         }
-        
-        // Draw image centered
-        this.ctx.drawImage(
-            img,
-            (this.canvas.width - width) / 2,
-            (this.canvas.height - height) / 2,
-            width,
-            height
-        );
-
-        // Apply initial filters
-        this.applyFilters();
-    }
-
-    applyFilters() {
-        if (!this.ctx || !this.image) return;
-
-        // Clear canvas
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Save current state
-        this.ctx.save();
 
         // Apply filters
         this.ctx.filter = `
@@ -179,17 +159,6 @@ class ImageEditor {
         `;
 
         // Draw image with filters
-        const img = this.image;
-        const aspectRatio = img.width / img.height;
-        let width = this.canvas.width;
-        let height = this.canvas.height;
-        
-        if (width / height > aspectRatio) {
-            width = height * aspectRatio;
-        } else {
-            height = width / aspectRatio;
-        }
-
         this.ctx.drawImage(
             img,
             (this.canvas.width - width) / 2,
@@ -197,9 +166,6 @@ class ImageEditor {
             width,
             height
         );
-
-        // Restore state
-        this.ctx.restore();
     }
 
     resetFilters() {
@@ -219,7 +185,7 @@ class ImageEditor {
             }
         });
 
-        // Redraw image
+        // Redraw image with reset filters
         if (this.image) {
             this.drawImage(this.image);
         }
