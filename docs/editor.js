@@ -365,11 +365,17 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Form found:', loginForm);
     console.log('Username display found:', usernameDisplay);
 
+    // Ensure loading overlay is visible and container is hidden
+    loadingOverlay.style.display = 'flex';
+    loadingOverlay.style.opacity = '1';
+    container.style.display = 'none';
+
     // Hide loading overlay and show container after a delay
     setTimeout(() => {
-        loadingOverlay.classList.add('hide');
+        loadingOverlay.style.opacity = '0';
+        loadingOverlay.style.pointerEvents = 'none';
         container.style.display = 'block';
-    }, 1500);
+    }, 2000);
 
     // Check authentication on load
     checkAuthStatus();
@@ -384,7 +390,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Attempting login with:', { username: username, passwordLength: password.length });
 
         // Show loading overlay during login
-        loadingOverlay.classList.remove('hide');
+        loadingOverlay.style.opacity = '1';
+        loadingOverlay.style.pointerEvents = 'auto';
         container.style.display = 'none';
         
         // For GitHub Pages, we'll use a hardcoded password check
@@ -398,19 +405,21 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Hide loading overlay and show container after successful login
             setTimeout(() => {
-                loadingOverlay.classList.add('hide');
+                loadingOverlay.style.opacity = '0';
+                loadingOverlay.style.pointerEvents = 'none';
                 container.style.display = 'block';
                 loginForm.style.display = 'none';
                 usernameDisplay.textContent = `Welcome, ${username}!`;
-            }, 1500);
+            }, 2000);
         } else {
             console.log('Login failed');
             // Hide loading overlay and show container after failed login
             setTimeout(() => {
-                loadingOverlay.classList.add('hide');
+                loadingOverlay.style.opacity = '0';
+                loadingOverlay.style.pointerEvents = 'none';
                 container.style.display = 'block';
                 alert('Invalid credentials. Please use:\nUsername: admin\nPassword: password123');
-            }, 1500);
+            }, 2000);
         }
     });
 });
