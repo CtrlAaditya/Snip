@@ -31,6 +31,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 /* Background GIF */
@@ -42,8 +43,7 @@ body {
     height: 100vh;
     object-fit: cover;
     opacity: 0.05;
-    z-index: -1;
-    animation: pulse 15s infinite;
+    z-index: -2;
 }
 
 /* Loading overlay */
@@ -102,6 +102,7 @@ body {
     overflow: hidden;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1;
 }
 
 /* Toolbar */
@@ -133,6 +134,8 @@ input[type="password"] {
     border-radius: 6px;
     color: var(--text-color);
     transition: border-color 0.2s;
+    z-index: 1;
+    position: relative;
 }
 
 input[type="text"]:focus,
@@ -182,6 +185,8 @@ input[type="password"]:focus {
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.2s;
+    z-index: 1;
+    position: relative;
 }
 
 .upload-btn:hover {
@@ -227,6 +232,8 @@ input[type="range"] {
     background: var(--border-color);
     border-radius: 4px;
     outline: none;
+    z-index: 1;
+    position: relative;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -256,6 +263,8 @@ button {
     cursor: pointer;
     transition: all 0.2s;
     font-weight: 500;
+    z-index: 1;
+    position: relative;
 }
 
 button:hover {
@@ -304,7 +313,7 @@ button:active {
     overflow: hidden;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
+    z-index: 1;
 }
 
 #editorCanvas {
@@ -315,6 +324,7 @@ button:active {
     height: 100%;
     display: block;
     background: rgba(0, 0, 0, 0.95);
+    z-index: 1;
 }
 
 /* Debug info */
@@ -327,7 +337,7 @@ button:active {
     padding: 10px;
     font-family: monospace;
     border-radius: 6px;
-    z-index: 1000;
+    z-index: 1001;
     pointer-events: none;
 }
 
@@ -375,6 +385,8 @@ button:active {
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
+    z-index: 1;
+    position: relative;
 }
 
 .close:hover {
