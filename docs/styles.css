@@ -114,14 +114,46 @@ input[type="password"]:focus {
 .control-group {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
     width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    backdrop-filter: blur(3px);
 }
 
 .control-group label {
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+    font-weight: 500;
     color: var(--text-color);
     margin-bottom: 4px;
+}
+
+.adjustments-container,
+.operations-container,
+.actions-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.adjustments-container .control-group {
+    flex: 1;
+    min-width: 150px;
+}
+
+.operations-container {
+    justify-content: center;
+}
+
+.operations-container button {
+    flex: 1;
+    min-width: 120px;
+}
+
+.actions-container {
+    justify-content: flex-end;
+    gap: 12px;
 }
 
 /* Upload container */
@@ -193,6 +225,7 @@ button {
     -webkit-appearance: none;
     appearance: none;
     min-width: 80px;
+    white-space: nowrap;
 }
 
 button:hover {
@@ -231,6 +264,7 @@ button:active {
 
 .flip-btn {
     background: #fbbf24;
+    flex: 1;
 }
 
 .flip-btn:hover {
@@ -239,6 +273,7 @@ button:active {
 
 .revert-btn {
     background: #db2777;
+    flex: 1;
 }
 
 .revert-btn:hover {

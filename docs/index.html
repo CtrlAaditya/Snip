@@ -48,34 +48,45 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label>Brightness</label>
-                    <input type="range" id="brightness" min="-100" max="100" value="0">
+                    <label>Image Adjustments</label>
+                    <div class="adjustments-container">
+                        <div class="control-group">
+                            <label>Brightness</label>
+                            <input type="range" id="brightness" min="-100" max="100" value="0">
+                        </div>
+                        <div class="control-group">
+                            <label>Contrast</label>
+                            <input type="range" id="contrast" min="-100" max="100" value="0">
+                        </div>
+                        <div class="control-group">
+                            <label>Saturation</label>
+                            <input type="range" id="saturation" min="-100" max="100" value="0">
+                        </div>
+                        <div class="control-group">
+                            <label>Hue</label>
+                            <input type="range" id="hue" min="-100" max="100" value="0">
+                        </div>
+                        <div class="control-group">
+                            <label>Blur</label>
+                            <input type="range" id="blur" min="0" max="10" value="0">
+                        </div>
+                    </div>
                 </div>
                 <div class="control-group">
-                    <label>Contrast</label>
-                    <input type="range" id="contrast" min="-100" max="100" value="0">
+                    <label>Image Operations</label>
+                    <div class="operations-container">
+                        <button id="flip-horizontal" class="flip-btn">Flip Horizontal</button>
+                        <button id="flip-vertical" class="flip-btn">Flip Vertical</button>
+                        <button id="revert" class="revert-btn">Revert</button>
+                    </div>
                 </div>
                 <div class="control-group">
-                    <label>Saturation</label>
-                    <input type="range" id="saturation" min="-100" max="100" value="0">
-                </div>
-                <div class="control-group">
-                    <label>Hue</label>
-                    <input type="range" id="hue" min="-100" max="100" value="0">
-                </div>
-                <div class="control-group">
-                    <label>Blur</label>
-                    <input type="range" id="blur" min="0" max="10" value="0">
-                </div>
-                <div class="control-group">
-                    <button id="flip-horizontal" class="flip-btn">Flip Horizontal</button>
-                    <button id="flip-vertical" class="flip-btn">Flip Vertical</button>
-                    <button id="revert" class="revert-btn">Revert</button>
-                </div>
-                <div class="control-group">
-                    <button id="reset" class="reset-btn">Reset</button>
-                    <button id="apply" class="apply-btn">Apply</button>
-                    <button id="save" class="save-btn">Save</button>
+                    <label>Actions</label>
+                    <div class="actions-container">
+                        <button id="reset" class="reset-btn">Reset</button>
+                        <button id="apply" class="apply-btn">Apply</button>
+                        <button id="save" class="save-btn">Save</button>
+                    </div>
                 </div>
             </div>
         </div>
