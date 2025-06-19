@@ -340,6 +340,48 @@ canvas {
     font-weight: bold;
 }
 
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    display: none;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.loading-gif {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+}
+
+.loading-overlay.show {
+    display: flex;
+}
+
+.loading-overlay {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {

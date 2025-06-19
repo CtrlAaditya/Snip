@@ -352,16 +352,25 @@ class ImageEditor {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded');
     
+    const loadingOverlay = document.getElementById('loadingOverlay');
     const loginForm = document.getElementById('loginForm');
     const usernameDisplay = document.getElementById('usernameDisplay');
     
-    if (!loginForm || !usernameDisplay) {
+    if (!loadingOverlay || !loginForm || !usernameDisplay) {
         console.error('Form elements not found!');
         return;
     }
 
     console.log('Form found:', loginForm);
     console.log('Username display found:', usernameDisplay);
+
+    // Show loading overlay when page loads
+    loadingOverlay.classList.add('show');
+
+    // Hide loading overlay after a short delay
+    setTimeout(() => {
+        loadingOverlay.classList.remove('show');
+    }, 1000);
 
     // Check authentication on load
     checkAuthStatus();
@@ -375,6 +384,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         console.log('Attempting login with:', { username: username, passwordLength: password.length });
 
+        // Show loading overlay during login
+        loadingOverlay.classList.add('show');
+        
         // For GitHub Pages, we'll use a hardcoded password check
         if (username === 'admin' && password === 'password123') {
             console.log('Login successful');
@@ -384,11 +396,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 username: username
             }));
             
-            loginForm.style.display = 'none';
-            usernameDisplay.textContent = `Welcome, ${username}!`;
+            // Hide loading overlay after successful login
+            setTimeout(() => {
+                loadingOverlay.classList.remove('show');
+                loginForm.style.display = 'none';
+                usernameDisplay.textContent = `Welcome, ${username}!`;
+            }, 1000);
         } else {
             console.log('Login failed');
-            alert('Invalid credentials. Please use:\nUsername: admin\nPassword: password123');
+            // Hide loading overlay after failed login
+            setTimeout(() => {
+                loadingOverlay.classList.remove('show');
+                alert('Invalid credentials. Please use:\nUsername: admin\nPassword: password123');
+            }, 1000);
         }
     });
 });
