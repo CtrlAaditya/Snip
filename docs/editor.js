@@ -5,6 +5,227 @@ console.log('Image editor script loaded');
 let isAuthenticated = false;
 let loadingPlayed = false;
 
+// ImageEditor class
+class ImageEditor {
+    constructor(elements) {
+        console.log('Initializing ImageEditor');
+        try {
+            // Initialize editor
+            this.initializeEditor(elements);
+        } catch (error) {
+            console.error('Error in ImageEditor constructor:', error);
+            throw error;
+        }
+    }
+
+    initializeEditor(elements) {
+        console.log('Initializing editor elements');
+        try {
+            // Get canvas and context
+            this.canvas = elements.canvas;
+            this.canvasContainer = elements.canvasContainer;
+            
+            if (!this.canvas) {
+                console.error('Canvas element not found');
+                throw new Error('Canvas element not found');
+            }
+
+            // Get context
+            this.ctx = this.canvas.getContext('2d');
+            if (!this.ctx) {
+                console.error('Could not get canvas context');
+                throw new Error('Could not get canvas context');
+            }
+
+            // Initialize properties
+            this.image = null;
+            this.filters = {
+                brightness: 0,
+                contrast: 0,
+                saturation: 0,
+                hue: 0,
+                blur: 0
+            };
+
+            // Set canvas size
+            this.setSize();
+            
+            // Add event listeners
+            this.addEventListeners();
+            
+            console.log('Editor initialized successfully');
+        } catch (error) {
+            console.error('Error initializing editor:', error);
+            throw error;
+        }
+    }
+
+    setSize() {
+        // Get container dimensions
+        if (!this.canvasContainer) {
+            throw new Error('Canvas container not found');
+        }
+        
+        // Set canvas dimensions based on container
+        const width = this.canvasContainer.clientWidth;
+        const height = this.canvasContainer.clientHeight;
+        
+        if (width <= 0 || height <= 0) {
+            console.error('Invalid container dimensions:', width, 'x', height);
+            throw new Error('Invalid container dimensions');
+        }
+        
+        this.canvas.width = width;
+        this.canvas.height = height;
+        
+        // Ensure canvas is visible
+        this.canvas.style.width = '100%';
+        this.canvas.style.height = '100%';
+        
+        console.log('Canvas size set to:', this.canvas.width, 'x', this.canvas.height);
+    }
+
+    addEventListeners() {
+        // Add resize listener
+        window.addEventListener('resize', () => this.setSize());
+        
+        // Add image upload listener
+        const imageUpload = document.getElementById('imageUpload');
+        if (imageUpload) {
+            imageUpload.addEventListener('change', (event) => this.handleImageUpload(event));
+        }
+
+        // Add filter listeners
+        const filters = ['brightness', 'contrast', 'saturation', 'hue', 'blur'];
+        filters.forEach(filter => {
+            const element = document.getElementById(filter);
+            if (element) {
+                element.addEventListener('input', (e) => {
+                    this.filters[filter] = parseInt(e.target.value);
+                    this.applyFilters();
+                });
+            }
+        });
+
+        // Add reset button listener
+        const resetButton = document.getElementById('reset');
+        if (resetButton) {
+            resetButton.addEventListener('click', () => this.resetFilters());
+        }
+    }
+
+    handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                this.image = img;
+                this.drawImage(img);
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    drawImage(img) {
+        if (!this.ctx) return;
+
+        // Clear canvas
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Calculate dimensions to fit canvas while maintaining aspect ratio
+        const aspectRatio = img.width / img.height;
+        let width = this.canvas.width;
+        let height = this.canvas.height;
+        
+        if (width / height > aspectRatio) {
+            width = height * aspectRatio;
+        } else {
+            height = width / aspectRatio;
+        }
+        
+        // Draw image centered
+        this.ctx.drawImage(
+            img,
+            (this.canvas.width - width) / 2,
+            (this.canvas.height - height) / 2,
+            width,
+            height
+        );
+
+        // Apply initial filters
+        this.applyFilters();
+    }
+
+    applyFilters() {
+        if (!this.ctx || !this.image) return;
+
+        // Clear canvas
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Save current state
+        this.ctx.save();
+
+        // Apply filters
+        this.ctx.filter = `
+            brightness(${this.filters.brightness + 100}%)
+            contrast(${this.filters.contrast + 100}%)
+            saturate(${this.filters.saturation + 100}%)
+            hue-rotate(${this.filters.hue}deg)
+            blur(${this.filters.blur}px)
+        `;
+
+        // Draw image with filters
+        const img = this.image;
+        const aspectRatio = img.width / img.height;
+        let width = this.canvas.width;
+        let height = this.canvas.height;
+        
+        if (width / height > aspectRatio) {
+            width = height * aspectRatio;
+        } else {
+            height = width / aspectRatio;
+        }
+
+        this.ctx.drawImage(
+            img,
+            (this.canvas.width - width) / 2,
+            (this.canvas.height - height) / 2,
+            width,
+            height
+        );
+
+        // Restore state
+        this.ctx.restore();
+    }
+
+    resetFilters() {
+        this.filters = {
+            brightness: 0,
+            contrast: 0,
+            saturation: 0,
+            hue: 0,
+            blur: 0
+        };
+
+        // Update slider values
+        ['brightness', 'contrast', 'saturation', 'hue', 'blur'].forEach(filter => {
+            const element = document.getElementById(filter);
+            if (element) {
+                element.value = 0;
+            }
+        });
+
+        // Redraw image
+        if (this.image) {
+            this.drawImage(this.image);
+        }
+    }
+}
+
 // DOM Elements
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded');
@@ -80,123 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-// ImageEditor class
-class ImageEditor {
-    constructor(elements) {
-        console.log('Initializing ImageEditor');
-        try {
-            // Initialize editor
-            this.initializeEditor(elements);
-        } catch (error) {
-            console.error('Error in ImageEditor constructor:', error);
-            throw error;
-        }
-    }
-
-    initializeEditor(elements) {
-        console.log('Initializing editor elements');
-        try {
-            // Get canvas and context
-            this.canvas = elements.canvas;
-            this.canvasContainer = elements.canvasContainer;
-            
-            if (!this.canvas) {
-                console.error('Canvas element not found');
-                throw new Error('Canvas element not found');
-            }
-
-            // Get context
-            this.ctx = this.canvas.getContext('2d');
-            if (!this.ctx) {
-                console.error('Could not get canvas context');
-                throw new Error('Could not get canvas context');
-            }
-
-            // Set canvas size
-            this.setSize();
-            
-            // Add event listeners
-            this.addEventListeners();
-            
-            console.log('Editor initialized successfully');
-        } catch (error) {
-            console.error('Error initializing editor:', error);
-            throw error;
-        }
-    }
-
-    setSize() {
-        // Get container dimensions
-        if (!this.canvasContainer) {
-            throw new Error('Canvas container not found');
-        }
-        
-        // Set canvas dimensions based on container
-        const width = this.canvasContainer.clientWidth;
-        const height = this.canvasContainer.clientHeight;
-        
-        if (width <= 0 || height <= 0) {
-            console.error('Invalid container dimensions:', width, 'x', height);
-            throw new Error('Invalid container dimensions');
-        }
-        
-        this.canvas.width = width;
-        this.canvas.height = height;
-        
-        // Ensure canvas is visible
-        this.canvas.style.width = '100%';
-        this.canvas.style.height = '100%';
-        
-        console.log('Canvas size set to:', this.canvas.width, 'x', this.canvas.height);
-    }
-
-    addEventListeners() {
-        // Add resize listener
-        window.addEventListener('resize', () => this.setSize());
-        
-        // Add image upload listener
-        const imageUpload = document.getElementById('imageUpload');
-        if (imageUpload) {
-            imageUpload.addEventListener('change', (event) => this.handleImageUpload(event));
-        }
-    }
-
-    handleImageUpload(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const img = new Image();
-            img.onload = () => this.drawImage(img);
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    }
-
-    drawImage(img) {
-        // Calculate dimensions to fit canvas while maintaining aspect ratio
-        const aspectRatio = img.width / img.height;
-        let width = this.canvas.width;
-        let height = this.canvas.height;
-        
-        if (width / height > aspectRatio) {
-            width = height * aspectRatio;
-        } else {
-            height = width / aspectRatio;
-        }
-        
-        // Draw image centered
-        this.ctx.drawImage(
-            img,
-            (this.canvas.width - width) / 2,
-            (this.canvas.height - height) / 2,
-            width,
-            height
-        );
-    }
-}
 
 // Check authentication status
 function checkAuthStatus() {
