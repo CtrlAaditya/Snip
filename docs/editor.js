@@ -370,14 +370,10 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         
-        console.log('Form submitted');
-        console.log('Form elements:', loginForm.elements);
-        
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
 
-        console.log('Username:', username);
-        console.log('Password:', password);
+        console.log('Attempting login with:', { username: username, passwordLength: password.length });
 
         // For GitHub Pages, we'll use a hardcoded password check
         if (username === 'admin' && password === 'password123') {
@@ -431,8 +427,22 @@ function logout() {
     location.reload(); // Refresh to show login form again
 }
 
+// Initialize editor when DOM is ready
+try {
+    new ImageEditor();
+} catch (error) {
+    console.error('Error initializing editor:', error);
+    alert('An error occurred while loading the image editor. Please check the console for details.');
+}
+
 // Add error handling for canvas
 window.onerror = function(msg, url, line, col, error) {
     console.error('Error:', error);
-    return false;
+    alert('An error occurred: ' + msg);
+};
+
+// Add error handling for unhandled promise rejections
+window.onunhandledrejection = function(event) {
+    console.error('Unhandled rejection:', event.reason);
+    alert('An unexpected error occurred. Please try again.');
 };
