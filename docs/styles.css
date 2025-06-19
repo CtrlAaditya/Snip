@@ -293,6 +293,53 @@ canvas {
     background: #2563eb;
 }
 
+/* Login Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    max-width: 400px;
+    border-radius: 8px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.auth-controls {
+    margin-bottom: 20px;
+}
+
+#usernameDisplay {
+    margin-left: 10px;
+    font-weight: bold;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {

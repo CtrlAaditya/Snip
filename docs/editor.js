@@ -1,6 +1,9 @@
 // Log script loading
 console.log('Image editor script loaded');
 
+// Authentication
+let isAuthenticated = false;
+
 class ImageEditor {
     constructor() {
         console.log('Initializing ImageEditor');
@@ -345,15 +348,109 @@ class ImageEditor {
     }
 }
 
-// Initialize editor when DOM is ready
+// DOM Elements
 document.addEventListener('DOMContentLoaded', () => {
-    try {
-        new ImageEditor();
-    } catch (error) {
-        console.error('Error initializing editor:', error);
-        alert('An error occurred while loading the image editor. Please check the console for details.');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginModal = document.getElementById('loginModal');
+    const closeBtn = document.querySelector('.close');
+    const loginForm = document.getElementById('loginForm');
+    const usernameDisplay = document.getElementById('usernameDisplay');
+
+    // Check authentication on load
+    checkAuthStatus();
+
+    // Login button click
+    loginBtn.addEventListener('click', () => {
+        loginModal.style.display = 'block';
+    });
+
+    // Close modal
+    closeBtn.addEventListener('click', () => {
+        loginModal.style.display = 'none';
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (event) => {
+        if (event.target === loginModal) {
+            loginModal.style.display = 'none';
+        }
+    });
+
+    // Login form submission
+    loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        
+        const formData = new FormData(loginForm);
+        const username = formData.get('username');
+        const password = formData.get('password');
+
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username, password }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                isAuthenticated = true;
+                loginModal.style.display = 'none';
+                loginForm.reset();
+                checkAuthStatus();
+            } else {
+                const error = await response.json();
+                alert(error.error);
+            }
+        } catch (error) {
+            console.error('Login error:', error);
+            alert('Login failed. Please try again.');
+        }
+    });
+
+    // Initialize editor when authenticated
+    if (isAuthenticated) {
+        try {
+            new ImageEditor();
+        } catch (error) {
+            console.error('Error initializing editor:', error);
+            alert('An error occurred while loading the image editor. Please check the console for details.');
+        }
     }
 });
+
+// Check authentication status
+async function checkAuthStatus() {
+    try {
+        const response = await fetch('/api/check-auth');
+        if (response.ok) {
+            const data = await response.json();
+            isAuthenticated = data.authenticated;
+            const usernameDisplay = document.getElementById('usernameDisplay');
+            usernameDisplay.textContent = data.username ? `Welcome, ${data.username}!` : '';
+            const loginBtn = document.getElementById('loginBtn');
+            loginBtn.style.display = isAuthenticated ? 'none' : 'inline-block';
+        }
+    } catch (error) {
+        console.error('Auth check error:', error);
+    }
+}
+
+// Logout
+async function logout() {
+    try {
+        const response = await fetch('/api/logout', {
+            method: 'POST',
+        });
+        if (response.ok) {
+            isAuthenticated = false;
+            checkAuthStatus();
+        }
+    } catch (error) {
+        console.error('Logout error:', error);
+    }
+}
 
 // Add error handling for canvas
 window.onerror = function(msg, url, line, col, error) {
