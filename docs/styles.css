@@ -294,8 +294,7 @@ button:active {
 .canvas-container {
     position: relative;
     width: 100%;
-    height: 100%;
-    flex: 1;
+    height: calc(100vh - 100px);
     min-height: 400px;
     display: flex;
     align-items: center;
@@ -327,6 +326,7 @@ button:active {
     font-family: monospace;
     border-radius: 6px;
     z-index: 1000;
+    pointer-events: none;
 }
 
 /* Animations */
