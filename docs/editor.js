@@ -391,23 +391,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = formData.get('password');
 
         try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
-            });
-
-            if (response.ok) {
-                const data = await response.json();
+            // For GitHub Pages, we'll use a hardcoded password check
+            const validCredentials = username === 'admin' && password === 'password123';
+            
+            if (validCredentials) {
                 isAuthenticated = true;
+                localStorage.setItem('auth', JSON.stringify({
+                    authenticated: true,
+                    username: username
+                }));
+                
                 loginModal.style.display = 'none';
                 loginForm.reset();
                 checkAuthStatus();
             } else {
-                const error = await response.json();
-                alert(error.error);
+                alert('Invalid credentials. Please try again.');
             }
         } catch (error) {
             console.error('Login error:', error);
@@ -417,44 +415,30 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Check authentication status
-async function checkAuthStatus() {
-    try {
-        const response = await fetch('/api/check-auth');
-        if (response.ok) {
-            const data = await response.json();
-            isAuthenticated = data.authenticated;
-            const loginBtn = document.getElementById('loginBtn');
-            const logoutBtn = document.getElementById('logoutBtn');
-            const usernameDisplay = document.getElementById('usernameDisplay');
-            
-            if (isAuthenticated) {
-                loginBtn.style.display = 'none';
-                logoutBtn.style.display = 'inline-block';
-                usernameDisplay.textContent = `Welcome, ${data.username}!`;
-            } else {
-                loginBtn.style.display = 'inline-block';
-                logoutBtn.style.display = 'none';
-                usernameDisplay.textContent = '';
-            }
-        }
-    } catch (error) {
-        console.error('Auth check error:', error);
+function checkAuthStatus() {
+    const authData = JSON.parse(localStorage.getItem('auth') || '{}');
+    isAuthenticated = authData.authenticated || false;
+    
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const usernameDisplay = document.getElementById('usernameDisplay');
+    
+    if (isAuthenticated) {
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'inline-block';
+        usernameDisplay.textContent = `Welcome, ${authData.username || 'User'}!`;
+    } else {
+        loginBtn.style.display = 'inline-block';
+        logoutBtn.style.display = 'none';
+        usernameDisplay.textContent = '';
     }
 }
 
 // Logout
-async function logout() {
-    try {
-        const response = await fetch('/api/logout', {
-            method: 'POST',
-        });
-        if (response.ok) {
-            isAuthenticated = false;
-            checkAuthStatus();
-        }
-    } catch (error) {
-        console.error('Logout error:', error);
-    }
+function logout() {
+    isAuthenticated = false;
+    localStorage.removeItem('auth');
+    checkAuthStatus();
 }
 
 // Add error handling for canvas
