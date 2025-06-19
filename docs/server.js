@@ -30,10 +30,22 @@ const checkAuth = (req, res, next) => {
     }
 };
 
+// Authentication status check
+app.get('/api/check-auth', (req, res) => {
+    res.json({
+        authenticated: req.session.authenticated || false,
+        username: req.session.username || null
+    });
+});
+
 // Login endpoint
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
     
+    if (!username || !password) {
+        return res.status(400).json({ error: 'Username and password are required' });
+    }
+
     if (users[username]) {
         const valid = await bcrypt.compare(password, users[username]);
         if (valid) {
@@ -41,7 +53,7 @@ app.post('/api/login', async (req, res) => {
             req.session.username = username;
             res.json({ success: true });
         } else {
-            res.status(401).json({ error: 'Invalid credentials' });
+            res.status(401).json({ error: 'Invalid password' });
         }
     } else {
         res.status(401).json({ error: 'User not found' });
@@ -55,11 +67,12 @@ app.post('/api/logout', (req, res) => {
 });
 
 // Static file serving
+app.use(express.static(__dirname));
+
+// Default route
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
-
-app.use(express.static(__dirname));
 
 // Start server
 app.listen(PORT, () => {
