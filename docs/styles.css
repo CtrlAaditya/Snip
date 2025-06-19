@@ -204,6 +204,47 @@ button:active {
     transform: translateY(0);
 }
 
+/* Button types */
+.reset-btn {
+    background: var(--secondary-color);
+}
+
+.reset-btn:hover {
+    background: #2563eb;
+}
+
+.apply-btn {
+    background: var(--primary-color);
+}
+
+.apply-btn:hover {
+    background: var(--hover-color);
+}
+
+.save-btn {
+    background: #4ade80;
+}
+
+.save-btn:hover {
+    background: #22c55e;
+}
+
+.flip-btn {
+    background: #fbbf24;
+}
+
+.flip-btn:hover {
+    background: #f59e0b;
+}
+
+.revert-btn {
+    background: #db2777;
+}
+
+.revert-btn:hover {
+    background: #be123c;
+}
+
 /* Canvas container */
 .canvas-container {
     flex: 1;

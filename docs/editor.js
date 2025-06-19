@@ -52,6 +52,7 @@ class ImageEditor {
 
             // Initialize properties
             this.image = null;
+            this.originalImage = null;
             this.filters = {
                 brightness: 0,
                 contrast: 0,
@@ -124,6 +125,22 @@ class ImageEditor {
             }
         });
 
+        // Add flip buttons listeners
+        const flipHorizontal = document.getElementById('flip-horizontal');
+        if (flipHorizontal) {
+            flipHorizontal.addEventListener('click', () => this.flipImage('horizontal'));
+        }
+
+        const flipVertical = document.getElementById('flip-vertical');
+        if (flipVertical) {
+            flipVertical.addEventListener('click', () => this.flipImage('vertical'));
+        }
+
+        const revert = document.getElementById('revert');
+        if (revert) {
+            revert.addEventListener('click', () => this.revertImage());
+        }
+
         // Add reset button listener
         const resetButton = document.getElementById('reset');
         if (resetButton) {
@@ -168,6 +185,7 @@ class ImageEditor {
             const img = new Image();
             img.onload = () => {
                 this.image = img;
+                this.originalImage = img; // Store original image for reverting
                 this.drawImage(img);
             };
             img.src = e.target.result;
@@ -204,6 +222,98 @@ class ImageEditor {
         // Draw image with filters
         this.ctx.drawImage(
             img,
+            (this.canvas.width - width) / 2,
+            (this.canvas.height - height) / 2,
+            width,
+            height
+        );
+    }
+
+    flipImage(direction) {
+        if (!this.image) return;
+
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        // Set temp canvas size
+        tempCanvas.width = this.canvas.width;
+        tempCanvas.height = this.canvas.height;
+
+        // Draw the current image
+        tempCtx.drawImage(this.canvas, 0, 0);
+
+        // Create a new image from the temp canvas
+        const flippedImage = new Image();
+        flippedImage.src = tempCanvas.toDataURL();
+
+        // Update the image with the flipped version
+        flippedImage.onload = () => {
+            // Clear canvas
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+            // Calculate dimensions
+            const aspectRatio = flippedImage.width / flippedImage.height;
+            let width = this.canvas.width;
+            let height = this.canvas.height;
+            
+            if (width / height > aspectRatio) {
+                width = height * aspectRatio;
+            } else {
+                height = width / aspectRatio;
+            }
+
+            // Apply flip transformation
+            this.ctx.save();
+            if (direction === 'horizontal') {
+                this.ctx.translate(width, 0);
+                this.ctx.scale(-1, 1);
+            } else if (direction === 'vertical') {
+                this.ctx.translate(0, height);
+                this.ctx.scale(1, -1);
+            }
+
+            // Draw flipped image
+            this.ctx.drawImage(
+                flippedImage,
+                (this.canvas.width - width) / 2,
+                (this.canvas.height - height) / 2,
+                width,
+                height
+            );
+            this.ctx.restore();
+        };
+    }
+
+    revertImage() {
+        if (!this.originalImage) return;
+        
+        // Clear canvas
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Calculate dimensions
+        const aspectRatio = this.originalImage.width / this.originalImage.height;
+        let width = this.canvas.width;
+        let height = this.canvas.height;
+        
+        if (width / height > aspectRatio) {
+            width = height * aspectRatio;
+        } else {
+            height = width / aspectRatio;
+        }
+
+        // Reset filters
+        this.filters = {
+            brightness: 0,
+            contrast: 0,
+            saturation: 0,
+            hue: 0,
+            blur: 0
+        };
+
+        // Draw original image
+        this.ctx.filter = 'none';
+        this.ctx.drawImage(
+            this.originalImage,
             (this.canvas.width - width) / 2,
             (this.canvas.height - height) / 2,
             width,
