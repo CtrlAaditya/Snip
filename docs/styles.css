@@ -362,13 +362,18 @@ canvas {
     align-items: center;
     z-index: 99999;
     pointer-events: none;
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.3s ease-in-out;
 }
 
-.loading-overlay.show {
+.loading-overlay.playing {
     opacity: 1;
     pointer-events: auto;
+}
+
+.loading-overlay.fading {
+    opacity: 0;
+    pointer-events: none;
 }
 
 .loading-content {
@@ -390,6 +395,18 @@ canvas {
     object-fit: contain;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* Background GIF */
+.background-gif {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    z-index: -1;
+    pointer-events: none;
 }
 
 /* Responsive Design */
