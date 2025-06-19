@@ -49,14 +49,19 @@ class ImageEditor {
     }
 
     setSize() {
-        // Set canvas size to match container
+        // Get container dimensions
         const container = this.canvas.parentElement;
         if (!container) {
             throw new Error('Canvas container not found');
         }
         
+        // Set canvas dimensions based on container
         this.canvas.width = container.clientWidth;
         this.canvas.height = container.clientHeight;
+        
+        // Ensure canvas is visible
+        this.canvas.style.width = '100%';
+        this.canvas.style.height = '100%';
         
         console.log('Canvas size set to:', this.canvas.width, 'x', this.canvas.height);
     }
