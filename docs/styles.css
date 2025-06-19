@@ -36,32 +36,30 @@ body {
 
 /* Main wrapper */
 .wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    position: relative;
+    width: 100%;
+    height: 100vh;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     background-color: var(--background-color);
+    padding: 16px;
 }
 
 /* Container */
 .container {
     width: 100%;
     min-height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(30, 41, 59, 0.95);
+    backdrop-filter: blur(5px);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    background: rgba(30, 41, 59, 0.95);
-    backdrop-filter: blur(5px);
     overflow-y: auto;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1;
-    max-width: 1200px;
-    margin: 0 auto;
 }
 
 /* Background GIF */

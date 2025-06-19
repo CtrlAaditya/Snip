@@ -19,81 +19,84 @@
         </div>
     </div>
 
-    <!-- Main container -->
-    <div class="container">
-        <!-- Toolbar -->
-        <div class="toolbar">
-            <div class="auth-controls">
-                <form id="loginForm" style="display: flex; gap: 10px;">
-                    <input type="text" id="username" placeholder="Username" required>
-                    <input type="password" id="password" placeholder="Password" required>
-                    <button type="submit">Login</button>
-                </form>
-                <span id="usernameDisplay"></span>
+    <!-- Main wrapper -->
+    <div class="wrapper">
+        <!-- Main container -->
+        <div class="container">
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <div class="auth-controls">
+                    <form id="loginForm" style="display: flex; gap: 10px;">
+                        <input type="text" id="username" placeholder="Username" required>
+                        <input type="password" id="password" placeholder="Password" required>
+                        <button type="submit">Login</button>
+                    </form>
+                    <span id="usernameDisplay"></span>
+                </div>
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Upload Image</label>
+                        <div class="upload-container">
+                            <label class="upload-btn" for="imageUpload">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M14 10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v4z"/>
+                                    <path d="M13 4H3a1 1 0 0 1-.707-1.707l1.414-1.414A1 1 0 0 1 4.414 1h7.172a1 1 0 0 1 .707 1.707L13 2.707A1 1 0 0 1 13 4z"/>
+                                    <path d="M10 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                </svg>
+                                Upload Image
+                            </label>
+                            <input type="file" id="imageUpload" accept="image/*">
+                            <div id="preview" class="preview-container"></div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Image Adjustments</label>
+                        <div class="adjustments-container">
+                            <div class="control-group">
+                                <label>Brightness</label>
+                                <input type="range" id="brightness" min="-100" max="100" value="0">
+                            </div>
+                            <div class="control-group">
+                                <label>Contrast</label>
+                                <input type="range" id="contrast" min="-100" max="100" value="0">
+                            </div>
+                            <div class="control-group">
+                                <label>Saturation</label>
+                                <input type="range" id="saturation" min="-100" max="100" value="0">
+                            </div>
+                            <div class="control-group">
+                                <label>Hue</label>
+                                <input type="range" id="hue" min="-100" max="100" value="0">
+                            </div>
+                            <div class="control-group">
+                                <label>Blur</label>
+                                <input type="range" id="blur" min="0" max="10" value="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Image Operations</label>
+                        <div class="operations-container">
+                            <button id="flip-horizontal" class="flip-btn">Flip Horizontal</button>
+                            <button id="flip-vertical" class="flip-btn">Flip Vertical</button>
+                            <button id="revert" class="revert-btn">Revert</button>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Actions</label>
+                        <div class="actions-container">
+                            <button id="reset" class="reset-btn">Reset</button>
+                            <button id="apply" class="apply-btn">Apply</button>
+                            <button id="save" class="save-btn">Save</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="controls">
-                <div class="control-group">
-                    <label>Upload Image</label>
-                    <div class="upload-container">
-                        <label class="upload-btn" for="imageUpload">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M14 10a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v4z"/>
-                                <path d="M13 4H3a1 1 0 0 1-.707-1.707l1.414-1.414A1 1 0 0 1 4.414 1h7.172a1 1 0 0 1 .707 1.707L13 2.707A1 1 0 0 1 13 4z"/>
-                                <path d="M10 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                            </svg>
-                            Upload Image
-                        </label>
-                        <input type="file" id="imageUpload" accept="image/*">
-                        <div id="preview" class="preview-container"></div>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label>Image Adjustments</label>
-                    <div class="adjustments-container">
-                        <div class="control-group">
-                            <label>Brightness</label>
-                            <input type="range" id="brightness" min="-100" max="100" value="0">
-                        </div>
-                        <div class="control-group">
-                            <label>Contrast</label>
-                            <input type="range" id="contrast" min="-100" max="100" value="0">
-                        </div>
-                        <div class="control-group">
-                            <label>Saturation</label>
-                            <input type="range" id="saturation" min="-100" max="100" value="0">
-                        </div>
-                        <div class="control-group">
-                            <label>Hue</label>
-                            <input type="range" id="hue" min="-100" max="100" value="0">
-                        </div>
-                        <div class="control-group">
-                            <label>Blur</label>
-                            <input type="range" id="blur" min="0" max="10" value="0">
-                        </div>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label>Image Operations</label>
-                    <div class="operations-container">
-                        <button id="flip-horizontal" class="flip-btn">Flip Horizontal</button>
-                        <button id="flip-vertical" class="flip-btn">Flip Vertical</button>
-                        <button id="revert" class="revert-btn">Revert</button>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <label>Actions</label>
-                    <div class="actions-container">
-                        <button id="reset" class="reset-btn">Reset</button>
-                        <button id="apply" class="apply-btn">Apply</button>
-                        <button id="save" class="save-btn">Save</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Canvas container -->
-        <div class="canvas-container">
-            <canvas id="editorCanvas"></canvas>
+            <!-- Canvas container -->
+            <div class="canvas-container">
+                <canvas id="editorCanvas"></canvas>
+            </div>
         </div>
     </div>
 
