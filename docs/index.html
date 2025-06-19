@@ -81,20 +81,14 @@
         </div>
     </div>
 
-    <!-- Debug information -->
-    <div id="debugInfo">
-        <p>Canvas status: <span id="canvasStatus">Not initialized</span></p>
-        <p>Container status: <span id="containerStatus">Not initialized</span></p>
-    </div>
-
     <!-- Editor script -->
     <script src="editor.js"></script>
 
     <script>
         // Add debug information
         function updateDebugInfo(canvasFound, containerFound) {
-            document.getElementById('canvasStatus').textContent = canvasFound ? 'Found' : 'Not found';
-            document.getElementById('containerStatus').textContent = containerFound ? 'Found' : 'Not found';
+            console.log('Canvas found:', canvasFound);
+            console.log('Container found:', containerFound);
         }
 
         // Initialize editor after DOM is ready
@@ -104,9 +98,6 @@
             // Check canvas and container
             const canvas = document.getElementById('editorCanvas');
             const container = document.querySelector('.canvas-container');
-            
-            console.log('Canvas found:', !!canvas);
-            console.log('Container found:', !!container);
             
             updateDebugInfo(!!canvas, !!container);
         });
