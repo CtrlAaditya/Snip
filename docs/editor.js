@@ -193,54 +193,19 @@ class ImageEditor {
         reader.readAsDataURL(file);
     }
 
-    drawImage(img) {
-        if (!this.ctx) return;
-
-        // Clear canvas
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Calculate dimensions to fit canvas while maintaining aspect ratio
-        const aspectRatio = img.width / img.height;
-        let width = this.canvas.width;
-        let height = this.canvas.height;
-        
-        if (width / height > aspectRatio) {
-            width = height * aspectRatio;
-        } else {
-            height = width / aspectRatio;
-        }
-
-        // Apply filters
-        this.ctx.filter = `
-            brightness(${this.filters.brightness + 100}%)
-            contrast(${this.filters.contrast + 100}%)
-            saturate(${this.filters.saturation + 100}%)
-            hue-rotate(${this.filters.hue}deg)
-            blur(${this.filters.blur}px)
-        `;
-
-        // Draw image with filters
-        this.ctx.drawImage(
-            img,
-            (this.canvas.width - width) / 2,
-            (this.canvas.height - height) / 2,
-            width,
-            height
-        );
-    }
-
     flipImage(direction) {
         if (!this.image) return;
 
+        // Create a temporary canvas
         const tempCanvas = document.createElement('canvas');
         const tempCtx = tempCanvas.getContext('2d');
         
-        // Set temp canvas size
-        tempCanvas.width = this.canvas.width;
-        tempCanvas.height = this.canvas.height;
+        // Set temp canvas size based on the image
+        tempCanvas.width = this.image.width;
+        tempCanvas.height = this.image.height;
 
-        // Draw the current image
-        tempCtx.drawImage(this.canvas, 0, 0);
+        // Draw the original image to temp canvas
+        tempCtx.drawImage(this.image, 0, 0);
 
         // Create a new image from the temp canvas
         const flippedImage = new Image();
@@ -251,7 +216,7 @@ class ImageEditor {
             // Clear canvas
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            // Calculate dimensions
+            // Calculate dimensions to fit canvas while maintaining aspect ratio
             const aspectRatio = flippedImage.width / flippedImage.height;
             let width = this.canvas.width;
             let height = this.canvas.height;
@@ -265,9 +230,11 @@ class ImageEditor {
             // Apply flip transformation
             this.ctx.save();
             if (direction === 'horizontal') {
+                // Move to right edge and flip horizontally
                 this.ctx.translate(width, 0);
                 this.ctx.scale(-1, 1);
             } else if (direction === 'vertical') {
+                // Move to bottom edge and flip vertically
                 this.ctx.translate(0, height);
                 this.ctx.scale(1, -1);
             }
@@ -281,6 +248,9 @@ class ImageEditor {
                 height
             );
             this.ctx.restore();
+
+            // Update the current image reference
+            this.image = flippedImage;
         };
     }
 
@@ -314,6 +284,45 @@ class ImageEditor {
         this.ctx.filter = 'none';
         this.ctx.drawImage(
             this.originalImage,
+            (this.canvas.width - width) / 2,
+            (this.canvas.height - height) / 2,
+            width,
+            height
+        );
+
+        // Reset the image reference to original
+        this.image = this.originalImage;
+    }
+
+    drawImage(img) {
+        if (!this.ctx) return;
+
+        // Clear canvas
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Calculate dimensions to fit canvas while maintaining aspect ratio
+        const aspectRatio = img.width / img.height;
+        let width = this.canvas.width;
+        let height = this.canvas.height;
+        
+        if (width / height > aspectRatio) {
+            width = height * aspectRatio;
+        } else {
+            height = width / aspectRatio;
+        }
+
+        // Apply filters
+        this.ctx.filter = `
+            brightness(${this.filters.brightness + 100}%)
+            contrast(${this.filters.contrast + 100}%)
+            saturate(${this.filters.saturation + 100}%)
+            hue-rotate(${this.filters.hue}deg)
+            blur(${this.filters.blur}px)
+        `;
+
+        // Draw image with filters
+        this.ctx.drawImage(
+            img,
             (this.canvas.width - width) / 2,
             (this.canvas.height - height) / 2,
             width,
