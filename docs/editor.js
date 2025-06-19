@@ -365,16 +365,21 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Form found:', loginForm);
     console.log('Username display found:', usernameDisplay);
 
-    // Ensure loading overlay is visible and container is hidden
+    // Initialize loading overlay
     loadingOverlay.style.display = 'flex';
     loadingOverlay.style.opacity = '1';
     container.style.display = 'none';
 
-    // Hide loading overlay and show container after a delay
+    // Hide loading overlay after a delay
     setTimeout(() => {
         loadingOverlay.style.opacity = '0';
         loadingOverlay.style.pointerEvents = 'none';
         container.style.display = 'block';
+        
+        // Add transition end listener to remove loading overlay
+        loadingOverlay.addEventListener('transitionend', () => {
+            loadingOverlay.style.display = 'none';
+        }, { once: true });
     }, 2000);
 
     // Check authentication on load
@@ -390,6 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Attempting login with:', { username: username, passwordLength: password.length });
 
         // Show loading overlay during login
+        loadingOverlay.style.display = 'flex';
         loadingOverlay.style.opacity = '1';
         loadingOverlay.style.pointerEvents = 'auto';
         container.style.display = 'none';
@@ -403,21 +409,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 username: username
             }));
             
-            // Hide loading overlay and show container after successful login
+            // Hide loading overlay after successful login
             setTimeout(() => {
                 loadingOverlay.style.opacity = '0';
                 loadingOverlay.style.pointerEvents = 'none';
                 container.style.display = 'block';
                 loginForm.style.display = 'none';
                 usernameDisplay.textContent = `Welcome, ${username}!`;
+                
+                // Add transition end listener to remove loading overlay
+                loadingOverlay.addEventListener('transitionend', () => {
+                    loadingOverlay.style.display = 'none';
+                }, { once: true });
             }, 2000);
         } else {
             console.log('Login failed');
-            // Hide loading overlay and show container after failed login
+            // Hide loading overlay after failed login
             setTimeout(() => {
                 loadingOverlay.style.opacity = '0';
                 loadingOverlay.style.pointerEvents = 'none';
                 container.style.display = 'block';
+                
+                // Add transition end listener to remove loading overlay
+                loadingOverlay.addEventListener('transitionend', () => {
+                    loadingOverlay.style.display = 'none';
+                }, { once: true });
+                
                 alert('Invalid credentials. Please use:\nUsername: admin\nPassword: password123');
             }, 2000);
         }
