@@ -63,7 +63,8 @@ body {
     height: 200px;
     margin-bottom: 24px;
     object-fit: contain;
-    background: url('assets/evangelion.gif') center/cover no-repeat;
+    display: block;
+    margin: 0 auto;
 }
 
 .loading-overlay p {
@@ -81,16 +82,16 @@ body {
     height: 100%;
     z-index: -1;
     pointer-events: none;
+    overflow: hidden;
 }
 
-.background-gif-container::before {
-    content: '';
+.background-gif {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 100%;
-    height: 100%;
-    background: url('assets/evangelion.gif') center/cover no-repeat;
+    height: auto;
     opacity: 0.05;
     animation: pulse 15s infinite;
 }
@@ -296,15 +297,15 @@ button:active {
 @keyframes pulse {
     0% {
         opacity: 0.05;
-        transform: scale(1);
+        transform: translate(-50%, -50%) scale(1);
     }
     50% {
         opacity: 0.1;
-        transform: scale(1.02);
+        transform: translate(-50%, -50%) scale(1.02);
     }
     100% {
         opacity: 0.05;
-        transform: scale(1);
+        transform: translate(-50%, -50%) scale(1);
     }
 }
 
