@@ -126,6 +126,21 @@ body {
     z-index: 1;
 }
 
+/* Canvas container */
+.canvas-container {
+    width: 100%;
+    max-width: 600px;
+    aspect-ratio: 1;
+    background: rgba(0, 0, 0, 0.95);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+}
+
 /* Controls Grid */
 .controls-grid {
     display: grid;
@@ -280,18 +295,6 @@ button:active {
     width: 28px;
     height: 28px;
     fill: var(--text-color);
-}
-
-/* Canvas container */
-.canvas-container {
-    background: rgba(0, 0, 0, 0.95);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 400px;
 }
 
 /* Animations */
