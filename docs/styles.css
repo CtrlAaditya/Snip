@@ -126,16 +126,38 @@ body {
     z-index: 1;
 }
 
+/* Controls Grid */
+.controls-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: start;
+}
+
+.controls {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    height: 100%;
+}
+
 /* Canvas container */
 .canvas-container {
     position: relative;
     width: 100%;
+    aspect-ratio: 1/1;
     max-width: 600px;
-    height: 600px;
+    margin: 0 auto;
     background: rgba(0, 0, 0, 0.95);
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin: 0 auto;
 }
 
 #editorCanvas {
@@ -147,25 +169,7 @@ body {
     background: transparent;
     border: none;
     object-fit: contain;
-}
-
-/* Controls Grid */
-.controls-grid {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 24px;
-    width: 100%;
-}
-
-.controls {
-    width: 100%;
-    background: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
-    backdrop-filter: blur(5px);
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
 }
 
 /* Control groups */
@@ -336,9 +340,13 @@ button:active {
 @media (max-width: 1024px) {
     .controls-grid {
         grid-template-columns: 1fr;
-        gap: 16px;
+        max-width: 600px;
     }
-
+    
+    .canvas-container {
+        max-width: 100%;
+    }
+    
     .controls {
         padding: 16px;
     }
