@@ -24,7 +24,7 @@
         <!-- Toolbar -->
         <div class="toolbar">
             <div class="auth-controls">
-                <form id="loginForm" style="display: flex; gap: 10px;">
+                <form id="loginForm" style="display: flex; gap: 12px; align-items: center;">
                     <input type="text" id="username" placeholder="Username" required>
                     <input type="password" id="password" placeholder="Password" required>
                     <button type="submit">Login</button>
@@ -35,6 +35,7 @@
 
         <!-- Controls -->
         <div class="controls">
+            <!-- Upload Section -->
             <div class="control-group">
                 <label>Upload Image</label>
                 <div class="upload-container">
@@ -50,35 +51,52 @@
                     <div id="preview" class="preview-container"></div>
                 </div>
             </div>
+
+            <!-- Adjustments Section -->
             <div class="control-group">
-                <label>Brightness</label>
-                <input type="range" id="brightness" min="-100" max="100" value="0">
+                <h3>Image Adjustments</h3>
+                <div class="adjustments-container">
+                    <div class="adjustment-item">
+                        <label>Brightness</label>
+                        <input type="range" id="brightness" min="-100" max="100" value="0">
+                    </div>
+                    <div class="adjustment-item">
+                        <label>Contrast</label>
+                        <input type="range" id="contrast" min="-100" max="100" value="0">
+                    </div>
+                    <div class="adjustment-item">
+                        <label>Saturation</label>
+                        <input type="range" id="saturation" min="-100" max="100" value="0">
+                    </div>
+                    <div class="adjustment-item">
+                        <label>Hue</label>
+                        <input type="range" id="hue" min="-100" max="100" value="0">
+                    </div>
+                    <div class="adjustment-item">
+                        <label>Blur</label>
+                        <input type="range" id="blur" min="0" max="10" value="0">
+                    </div>
+                </div>
             </div>
+
+            <!-- Operations Section -->
             <div class="control-group">
-                <label>Contrast</label>
-                <input type="range" id="contrast" min="-100" max="100" value="0">
+                <h3>Image Operations</h3>
+                <div class="operations-container">
+                    <button id="flip-horizontal" class="operation-btn">Flip Horizontal</button>
+                    <button id="flip-vertical" class="operation-btn">Flip Vertical</button>
+                    <button id="revert" class="operation-btn">Revert</button>
+                </div>
             </div>
+
+            <!-- Actions Section -->
             <div class="control-group">
-                <label>Saturation</label>
-                <input type="range" id="saturation" min="-100" max="100" value="0">
-            </div>
-            <div class="control-group">
-                <label>Hue</label>
-                <input type="range" id="hue" min="-100" max="100" value="0">
-            </div>
-            <div class="control-group">
-                <label>Blur</label>
-                <input type="range" id="blur" min="0" max="10" value="0">
-            </div>
-            <div class="control-group">
-                <button id="flip-horizontal" class="flip-btn">Flip Horizontal</button>
-                <button id="flip-vertical" class="flip-btn">Flip Vertical</button>
-                <button id="revert" class="revert-btn">Revert</button>
-            </div>
-            <div class="control-group">
-                <button id="reset" class="reset-btn">Reset</button>
-                <button id="apply" class="apply-btn">Apply</button>
-                <button id="save" class="save-btn">Save</button>
+                <h3>Actions</h3>
+                <div class="actions-container">
+                    <button id="reset" class="action-btn">Reset</button>
+                    <button id="apply" class="action-btn">Apply</button>
+                    <button id="save" class="action-btn">Save</button>
+                </div>
             </div>
         </div>
 
