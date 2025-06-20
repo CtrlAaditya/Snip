@@ -152,8 +152,8 @@ body {
 .canvas-container {
     position: relative;
     width: 100%;
-    aspect-ratio: 1/1;
-    max-width: 600px;
+    height: 60vh; /* Using viewport height units */
+    max-width: 60vh; /* Same as height to maintain square */
     margin: 0 auto;
     background: rgba(0, 0, 0, 0.95);
     border-radius: 12px;
@@ -341,6 +341,13 @@ button:active {
     .controls-grid {
         grid-template-columns: 1fr;
         max-width: 600px;
+    }
+    
+    .canvas-container {
+        width: 100%;
+        max-width: 100%;
+        height: 100vw; /* Makes container square on mobile */
+        max-height: 80vh;
     }
     
     .canvas-container {
