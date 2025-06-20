@@ -47,6 +47,7 @@ body {
     align-items: center;
     justify-content: center;
     z-index: 1000;
+    padding: 20px;
 }
 
 .loading-content {
@@ -56,15 +57,26 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     animation: fadeIn 0.5s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.loading-gif-container {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
 }
 
 .loading-gif {
-    width: 200px;
-    height: 200px;
-    margin-bottom: 24px;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
-    display: block;
-    margin: 0 auto;
 }
 
 .loading-overlay p {
